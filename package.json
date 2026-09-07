@@ -1,0 +1,28 @@
+{
+  "name": "codecritter",
+  "displayName": "CodeCritter",
+  "description": "A tiny status-bar pet that reacts to how you code.",
+  "version": "0.0.1",
+  "publisher": "adnan9-63",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Adnan9-63/codecritter"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codecritter.sayHi",
+        "title": "CodeCritter: Say Hi"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0"
+  }
+}
