@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CodeCritter 🐾
 
 A tiny pet that lives in your VS Code status bar and reacts to how you code.
@@ -22,3 +23,6 @@ Levels up every 10 saves. Fully local — no data ever leaves your machine.
 2. Install the packaging tool: `npm install -g @vscode/vsce`
 3. Package it: `vsce package` (produces a `.vsix` file anyone can install manually)
 4. Publish it: `vsce publish` (puts it on the Marketplace for free, one `ext install` away for anyone)
+=======
+# Codecritter-
+>>>>>>> aa0c217dd1d2491bfe53197f6b2c7ef32a6cc480
