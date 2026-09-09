@@ -20,7 +20,25 @@
         "command": "codecritter.sayHi",
         "title": "CodeCritter: Say Hi"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codecritter-sidebar",
+          "title": "CodeCritter",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codecritter-sidebar": [
+        {
+          "type": "webview",
+          "id": "codecritter.petView",
+          "name": "Your critter"
+        }
+      ]
+    }
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0"
