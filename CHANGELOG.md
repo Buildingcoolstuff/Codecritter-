@@ -5,6 +5,41 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.1.0] — 2026-09-17
+
+*Competitor research edition — features inspired by gaps in vscode-pets, Code Tamagotchi, LevelUp, and Power Mode.*
+
+### ✨ Added
+
+#### 🎨 Pet Theme Selector (4 skins)
+- New command: **CodeCritter: Choose Pet Theme 🎨** (quick-pick menu)
+- New setting: `codecritter.petTheme` — `default` / `fire` / `galaxy` / `nature`
+- Dashboard SVG critter now changes color completely based on the selected theme
+- Theme name shown in the status bar tooltip and as a badge in the dashboard
+
+#### ⚡ Typing Combo Meter
+- When typing at least 2 new lines rapidly, the status bar flashes `⚡ 🔥` (comboTyping mood)
+- Unique feature not found in any competitor — gives instant positive feedback for momentum
+- Resets automatically after 4 seconds of inactivity
+
+#### 💧 Break Reminder System
+- New setting: `codecritter.breakReminder` (default: off) — stress-free by default
+- New setting: `codecritter.breakReminderInterval` (default: 45 min)
+- After N minutes of continuous coding, critter nudges you to take a break
+- Includes a "Snooze 15 min" button so it's never annoying
+
+#### 📅 Weekly Monday Review
+- New setting: `codecritter.weeklyReview` (default: on)
+- On the first VS Code open each Monday, shows a one-line summary of your all-time stats
+- Includes an "Open Dashboard" button — inspired by Spotify Wrapped style summaries
+
+### 🔧 Fixed
+- **Line count paste inflation**: Large pastes (e.g., copying a 500-line file) now cap at 10 lines per change event. Previously, pasting 500 lines would incorrectly award 500 XP.
+- **Diagnostics scope**: Error detection is now scoped to *visible editors only* (not the entire workspace), reducing false `struggling 😰` triggers from background linting
+
+---
+
+
 ## [1.0.0] — 2026-09-17
 
 ### ✨ Added — Major Feature Release
