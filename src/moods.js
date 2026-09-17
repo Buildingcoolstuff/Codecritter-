@@ -53,6 +53,13 @@ const MOODS = {
     label: 'Celebrating',
     tip: 'WOOOOO!! 🎉',
     animClass: 'pet-celebrating'
+  },
+  comboTyping: {
+    emoji: '⚡',
+    statusText: '⚡ 🔥',
+    label: 'On Fire!',
+    tip: "You're on a typing streak! Keep going!",
+    animClass: 'pet-excited'
   }
 };
 
@@ -209,9 +216,50 @@ function getRandomTip() {
   return pick(CODING_TIPS);
 }
 
+/**
+ * Color palettes for each pet theme.
+ * These CSS custom property values are injected into the dashboard's <style> block.
+ *
+ * bodyColor  — main critter body fill
+ * bodyAlt    — head fill (slightly lighter)
+ * accent     — antenna balls, arm color
+ * antennae   — antenna line color
+ */
+const PET_THEMES = {
+  default: {
+    label:    '🐱 Default (Teal)',
+    body:     '#4ecdc4',
+    bodyAlt:  '#5eddd4',
+    accent:   '#9d7fe3',
+    antennae: '#3db5ac'
+  },
+  fire: {
+    label:    '🔥 Fire (Orange)',
+    body:     '#e67e22',
+    bodyAlt:  '#f39c12',
+    accent:   '#c0392b',
+    antennae: '#d35400'
+  },
+  galaxy: {
+    label:    '🌌 Galaxy (Purple)',
+    body:     '#6c3483',
+    bodyAlt:  '#8e44ad',
+    accent:   '#2980b9',
+    antennae: '#5b2c6f'
+  },
+  nature: {
+    label:    '🌿 Nature (Green)',
+    body:     '#27ae60',
+    bodyAlt:  '#2ecc71',
+    accent:   '#f39c12',
+    antennae: '#1e8449'
+  }
+};
+
 module.exports = {
   MOODS,
   MILESTONES,
+  PET_THEMES,
   getMoodDisplay,
   checkMilestones,
   getRandomHiMessage,

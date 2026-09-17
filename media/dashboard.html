@@ -17,6 +17,12 @@
   --red:          #e74c3c;
   --purple:       #9b59b6;
   --blue:         #3498db;
+
+  /* Pet theme colors — injected by extension */
+  --pet-body:      __THEME_BODY__;
+  --pet-body-alt:  __THEME_BODY_ALT__;
+  --pet-accent:    __THEME_ACCENT__;
+  --pet-antennae:  __THEME_ANTENNAE__;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -290,9 +296,9 @@ body {
           <ellipse cx="70" cy="152" rx="30" ry="5" fill="rgba(0,0,0,0.18)"/>
 
           <!-- ── Arms ── -->
-          <path d="M 35 102 Q 18 96 16 84" stroke="#3db5ac" stroke-width="9"
+          <path d="M 35 102 Q 18 96 16 84" stroke="var(--pet-antennae)" stroke-width="9"
                 stroke-linecap="round" fill="none"/>
-          <path d="M 105 102 Q 122 96 124 84" stroke="#3db5ac" stroke-width="9"
+          <path d="M 105 102 Q 122 96 124 84" stroke="var(--pet-antennae)" stroke-width="9"
                 stroke-linecap="round" fill="none"/>
 
           <!-- ── Laptop base ── -->
@@ -312,7 +318,7 @@ body {
           </rect>
 
           <!-- ── Body ── -->
-          <ellipse cx="70" cy="108" rx="40" ry="37" fill="#4ecdc4"/>
+          <ellipse cx="70" cy="108" rx="40" ry="37" fill="var(--pet-body)"/>
           <!-- Belly highlight -->
           <ellipse cx="70" cy="112" rx="24" ry="18" fill="rgba(255,255,255,0.13)"/>
           <!-- Body segment lines -->
@@ -320,7 +326,7 @@ body {
           <path d="M 36 126 Q 70 133 104 126" stroke="rgba(0,0,0,0.06)" stroke-width="1.5" fill="none"/>
 
           <!-- ── Head ── -->
-          <circle cx="70" cy="57" r="33" fill="#5eddd4"/>
+          <circle cx="70" cy="57" r="33" fill="var(--pet-body-alt)"/>
           <!-- Head highlight -->
           <ellipse cx="58" cy="44" rx="12" ry="8" fill="rgba(255,255,255,0.18)" transform="rotate(-20,58,44)"/>
 
@@ -364,10 +370,10 @@ body {
           </g>
 
           <!-- ── Antennae ── -->
-          <line x1="58" y1="26" x2="48" y2="7"  stroke="#3db5ac" stroke-width="3.5" stroke-linecap="round"/>
-          <line x1="82" y1="26" x2="92" y2="7"  stroke="#3db5ac" stroke-width="3.5" stroke-linecap="round"/>
-          <circle cx="47" cy="6"  r="6" fill="#9d7fe3"/>
-          <circle cx="93" cy="6"  r="6" fill="#9d7fe3"/>
+          <line x1="58" y1="26" x2="48" y2="7"  stroke="var(--pet-antennae)" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="82" y1="26" x2="92" y2="7"  stroke="var(--pet-antennae)" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="47" cy="6"  r="6" fill="var(--pet-accent)"/>
+          <circle cx="93" cy="6"  r="6" fill="var(--pet-accent)"/>
           <!-- Antenna shine -->
           <circle cx="45" cy="4"  r="2" fill="rgba(255,255,255,0.5)"/>
           <circle cx="91" cy="4"  r="2" fill="rgba(255,255,255,0.5)"/>
@@ -443,6 +449,12 @@ body {
       <div class="mood-badge" id="mood-badge">
         <span class="mood-emoji" id="mood-emoji">🐱</span>
         <span id="mood-label">Happy</span>
+      </div>
+
+      <!-- Theme badge -->
+      <div class="mood-badge" style="font-size:0.75rem; opacity:0.8;">
+        <span>🎨</span>
+        <span>__THEME_LABEL__</span>
       </div>
     </div>
 

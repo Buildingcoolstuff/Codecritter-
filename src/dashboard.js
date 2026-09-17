@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const path   = require('path');
 const fs     = require('fs');
-const { MILESTONES } = require('./moods');
+const { MILESTONES, PET_THEMES } = require('./moods');
 
 /** @type {vscode.WebviewPanel | null} */
 let panel = null;
@@ -82,6 +82,10 @@ function _updatePanel(statsEngine, petName, currentMood) {
     ? `${codingHrs}h ${codingMins}m`
     : `${codingMins}m`;
 
+  // Pet theme colors
+  const themeKey  = config.get('petTheme', 'default');
+  const theme     = PET_THEMES[themeKey] || PET_THEMES.default;
+
   const milestoneData = MILESTONES.map(m => ({
     id:       m.id,
     emoji:    m.emoji,
@@ -112,6 +116,11 @@ function _updatePanel(statsEngine, petName, currentMood) {
     '__DAILY_PROGRESS__':  String(dailyPct),
     '__GOAL_DONE_CLASS__': isGoalDone ? 'done' : '',
     '__CURRENT_MOOD__':    currentMood,
+    '__THEME_BODY__':      theme.body,
+    '__THEME_BODY_ALT__':  theme.bodyAlt,
+    '__THEME_ACCENT__':    theme.accent,
+    '__THEME_ANTENNAE__':  theme.antennae,
+    '__THEME_LABEL__':     _esc(theme.label),
     '__MILESTONES_JSON__': JSON.stringify(milestoneData)
   };
 
