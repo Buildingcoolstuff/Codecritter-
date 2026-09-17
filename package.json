@@ -1,26 +1,87 @@
 {
   "name": "codecritter",
-  "displayName": "CodeCritter",
-  "description": "A tiny status-bar pet that reacts to how you code.",
-  "version": "0.0.1",
+  "displayName": "CodeCritter 🐾",
+  "description": "A virtual pet that lives in your status bar and reacts to how you code — with stats, streaks, achievements, and an animated dashboard.",
+  "version": "1.0.0",
   "publisher": "adnan9-63",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#2d2d4a",
+    "theme": "dark"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Adnan9-63/codecritter"
+    "url": "https://github.com/Buildingcoolstuff/Codecritter-.git"
   },
+  "homepage": "https://github.com/Buildingcoolstuff/Codecritter-#readme",
+  "bugs": {
+    "url": "https://github.com/Buildingcoolstuff/Codecritter-/issues"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Other"],
+  "categories": ["Other", "Visualization"],
+  "keywords": ["pet", "fun", "gamification", "status bar", "productivity", "tamagotchi", "companion", "critter", "motivation", "streak"],
   "activationEvents": ["onStartupFinished"],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
         "command": "codecritter.sayHi",
-        "title": "CodeCritter: Say Hi"
+        "title": "CodeCritter: Say Hi 👋",
+        "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.showDashboard",
+        "title": "CodeCritter: Show Dashboard 📊",
+        "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.resetStats",
+        "title": "CodeCritter: Reset All Stats 🗑️",
+        "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.setDailyGoal",
+        "title": "CodeCritter: Set Daily Goal 🎯",
+        "category": "CodeCritter"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "CodeCritter",
+      "properties": {
+        "codecritter.petName": {
+          "type": "string",
+          "default": "Critter",
+          "description": "Give your CodeCritter a name! It will appear in the tooltip and notifications.",
+          "maxLength": 20
+        },
+        "codecritter.showInStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show CodeCritter in the status bar."
+        },
+        "codecritter.dailyGoal": {
+          "type": "number",
+          "default": 100,
+          "minimum": 1,
+          "maximum": 100000,
+          "description": "Your daily lines-typed goal. CodeCritter celebrates when you hit it!"
+        },
+        "codecritter.enableTips": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show motivational tips and coding tips in notifications."
+        },
+        "codecritter.statusBarAlignment": {
+          "type": "string",
+          "enum": ["left", "right"],
+          "default": "right",
+          "description": "Which side of the status bar CodeCritter appears on (requires restart)."
+        }
+      }
+    }
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0"
