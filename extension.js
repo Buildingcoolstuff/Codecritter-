@@ -1,19 +1,23 @@
 'use strict';
 
 const vscode = require('vscode');
-const { StatsEngine }                           = require('./src/stats');
+const { StatsEngine }                                = require('./src/stats');
 const { getMoodDisplay, checkMilestones,
-        getRandomHiMessage, getRandomTip }      = require('./src/moods');
-const { showDashboard, updateDashboardIfOpen }  = require('./src/dashboard');
+        getRandomHiMessage, getRandomTip, PET_THEMES } = require('./src/moods');
+const { showDashboard, updateDashboardIfOpen }       = require('./src/dashboard');
 
 /** @type {vscode.StatusBarItem} */
 let statusBarItem;
 let idleTimer;
 let codingTimer;
-let flashTimeout = null;
-let lastActivity = Date.now();
-let currentMood  = 'happy';
+let breakTimer     = null;   // tracks continuous coding for break reminder
+let flashTimeout   = null;
+let comboTimeout   = null;   // typing combo flash timer
+let lastActivity   = Date.now();
+let currentMood    = 'happy';
 let prevErrorCount = 0;
+let continuousCodingMins = 0; // minutes coded without a long idle
+let lastBreakReminderDay = null; // ISO date of last weekly review shown
 
 /** @type {StatsEngine} */
 let stats;
@@ -24,6 +28,7 @@ function cfg()        { return vscode.workspace.getConfiguration('codecritter');
 function petName()    { return cfg().get('petName', 'Critter'); }
 function dailyGoal()  { return cfg().get('dailyGoal', 100); }
 function tipsOn()     { return cfg().get('enableTips', true); }
+function petTheme()   { return cfg().get('petTheme', 'default'); }
 
 // ─── Status bar helpers ───────────────────────────────────────────────────────
 
@@ -35,14 +40,16 @@ function _buildText(moodKey) {
 function _buildTooltip(moodKey) {
   const m  = getMoodDisplay(moodKey);
   const sn = stats.getSnapshot();
+  const theme = PET_THEMES[petTheme()] || PET_THEMES.default;
   const lines = [
     `${petName()} the CodeCritter — ${m.label} (Level ${sn.level})`,
     `${m.tip}`,
     `━━━━━━━━━━━━━━━━━━━`,
     `💾 ${sn.saveCount.toLocaleString()} saves  ·  💻 ${sn.linesTyped.toLocaleString()} lines typed`,
     `🔥 ${sn.currentStreak}-day streak  ·  🐛 ${sn.errorsFixed} errors fixed`,
+    `🎨 Theme: ${theme.label}`,
     ``,
-    `Click to say hi!  |  Cmd: CodeCritter: Show Dashboard`
+    `Click to say hi!  |  Open Command Palette → "CodeCritter"`
   ];
   return new vscode.MarkdownString(lines.join('\n'), true);
 }
@@ -86,6 +93,36 @@ function checkAndShowMilestones(snapshot) {
   }
 }
 
+// ─── Weekly Review ────────────────────────────────────────────────────────────
+
+/**
+ * Checks if today is Monday and we haven't shown the weekly review yet.
+ * Shows a one-line summary of last week's stats.
+ */
+function maybeShowWeeklyReview() {
+  if (!cfg().get('weeklyReview', true)) return;
+
+  const today     = new Date();
+  const todayStr  = today.toISOString().slice(0, 10);
+  if (today.getDay() !== 1) return;                  // only on Monday
+  if (lastBreakReminderDay === todayStr) return;      // already shown today
+
+  lastBreakReminderDay = todayStr;
+  const sn = stats.getSnapshot();
+
+  vscode.window.showInformationMessage(
+    `🐾 Weekly Check-in! ` +
+    `You've typed ${sn.linesTyped.toLocaleString()} lines total, ` +
+    `saved ${sn.saveCount.toLocaleString()} files, ` +
+    `and you're on a ${sn.currentStreak}-day streak. Keep it up! 🔥`,
+    'Open Dashboard'
+  ).then(choice => {
+    if (choice === 'Open Dashboard') {
+      vscode.commands.executeCommand('codecritter.showDashboard');
+    }
+  });
+}
+
 // ─── activate ─────────────────────────────────────────────────────────────────
 
 /**
@@ -106,6 +143,9 @@ function activate(context) {
   if (cfg().get('showInStatusBar', true)) {
     statusBarItem.show();
   }
+
+  // Show weekly review on startup
+  maybeShowWeeklyReview();
 
   // ── Commands ──
 
@@ -159,6 +199,27 @@ function activate(context) {
     }
   });
 
+  /** Choose pet theme from quick-pick */
+  const cmdChooseTheme = vscode.commands.registerCommand('codecritter.choosePetTheme', async () => {
+    const items = Object.entries(PET_THEMES).map(([key, t]) => ({
+      label:       t.label,
+      description: key === petTheme() ? '✓ Current' : '',
+      themeKey:    key
+    }));
+
+    const picked = await vscode.window.showQuickPick(items, {
+      title:       'CodeCritter — Choose Pet Theme',
+      placeHolder: 'Pick a color skin for your CodeCritter'
+    });
+
+    if (picked) {
+      await cfg().update('petTheme', picked.themeKey, vscode.ConfigurationTarget.Global);
+      vscode.window.showInformationMessage(`🎨 Pet theme changed to ${picked.label}!`);
+      _applyMood(currentMood); // refresh tooltip
+      updateDashboardIfOpen(stats, petName(), currentMood);
+    }
+  });
+
   // ── Event: File Saved ──
   const onSave = vscode.workspace.onDidSaveTextDocument(() => {
     lastActivity = Date.now();
@@ -173,11 +234,15 @@ function activate(context) {
   const onChange = vscode.workspace.onDidChangeTextDocument(e => {
     lastActivity = Date.now();
 
-    // Count newly inserted lines (newline characters in inserted text)
+    // Count newly inserted lines with a paste-cap to prevent stat inflation.
+    // Single keystroke Enter = 1 line. Large pastes are capped at 10 lines max
+    // per change event so that pasting a 500-line file doesn't give 500 XP.
     let newLines = 0;
     for (const change of e.contentChanges) {
       const inserted = change.text.split('\n').length - 1;
-      if (inserted > 0) newLines += inserted;
+      if (inserted > 0) {
+        newLines += Math.min(inserted, 10); // cap: max 10 lines per change
+      }
     }
 
     if (newLines > 0) {
@@ -191,6 +256,14 @@ function activate(context) {
         setMood('celebrating', true);
       }
 
+      // ── Typing combo flash ──
+      // When a user is actively typing (not just paste-importing), flash the
+      // combo mood for 2 s whenever they've typed 5+ lines since last flash.
+      if (!comboTimeout && newLines >= 2 && !flashTimeout) {
+        setMood('comboTyping', true);
+        comboTimeout = setTimeout(() => { comboTimeout = null; }, 4000);
+      }
+
       const snap = stats.getSnapshot();
       checkAndShowMilestones(snap);
       updateDashboardIfOpen(stats, petName(), currentMood);
@@ -199,8 +272,11 @@ function activate(context) {
 
   // ── Event: Diagnostics (errors/warnings) ──
   const onDiagnostics = vscode.languages.onDidChangeDiagnostics(() => {
-    const allDiags  = vscode.languages.getDiagnostics();
+    // Only scan diagnostics from open editors to avoid noisy workspace-wide counts
+    const openUris = vscode.window.visibleTextEditors.map(e => e.document.uri.toString());
+    const allDiags = vscode.languages.getDiagnostics();
     const errorCount = allDiags
+      .filter(([uri]) => openUris.includes(uri.toString()))
       .flatMap(([, diags]) => diags)
       .filter(d => d.severity === vscode.DiagnosticSeverity.Error)
       .length;
@@ -220,7 +296,7 @@ function activate(context) {
       if (errorCount > 0) {
         currentMood = 'struggling';
       } else if (currentMood === 'struggling') {
-        // Cleared all errors — celebrate briefly then go focused
+        // Cleared all errors — go focused for 5 s then happy
         currentMood = 'focused';
         setTimeout(() => {
           if (currentMood === 'focused') {
@@ -235,7 +311,7 @@ function activate(context) {
 
   // ── Idle Mood Timer (every 30 s) ──
   idleTimer = setInterval(() => {
-    if (flashTimeout) return; // don't interrupt flash
+    if (flashTimeout) return;
     const idleMins = (Date.now() - lastActivity) / 60000;
     let target;
     if      (idleMins > 10) target = 'sleepy';
@@ -249,11 +325,34 @@ function activate(context) {
     }
   }, 30_000);
 
-  // ── Coding Time Tracker (every 1 min) ──
+  // ── Coding Time + Break Reminder Tracker (every 1 min) ──
   codingTimer = setInterval(() => {
     const idleMins = (Date.now() - lastActivity) / 60000;
     if (idleMins < 5) {
       stats.recordCodingTime(1);
+      continuousCodingMins++;
+
+      // Break reminder
+      const breakEnabled  = cfg().get('breakReminder', false);
+      const breakInterval = cfg().get('breakReminderInterval', 45);
+
+      if (breakEnabled && continuousCodingMins >= breakInterval) {
+        continuousCodingMins = 0; // reset so it doesn't fire again immediately
+        vscode.window.showInformationMessage(
+          `🐾 ${petName()} thinks you should take a short break! ` +
+          `You've been coding for ${breakInterval} min straight. Stretch, hydrate, come back fresh! 💧`,
+          'Snooze 15 min',
+          'Got it!'
+        ).then(choice => {
+          if (choice === 'Snooze 15 min') {
+            // Don't remind again for 15 more minutes
+            continuousCodingMins = -15;
+          }
+        });
+      }
+    } else {
+      // User is idle — reset continuous coding counter
+      continuousCodingMins = 0;
     }
   }, 60_000);
 
@@ -262,7 +361,8 @@ function activate(context) {
     if (!e.affectsConfiguration('codecritter')) return;
     const show = cfg().get('showInStatusBar', true);
     show ? statusBarItem.show() : statusBarItem.hide();
-    _applyMood(currentMood); // rebuild text/tooltip in case petName changed
+    _applyMood(currentMood); // rebuild text/tooltip for petName/theme changes
+    updateDashboardIfOpen(stats, petName(), currentMood); // refresh theme in dashboard
   });
 
   // ── Register everything ──
@@ -272,11 +372,16 @@ function activate(context) {
     cmdDashboard,
     cmdReset,
     cmdSetGoal,
+    cmdChooseTheme,
     onSave,
     onChange,
     onDiagnostics,
     onConfigChange,
-    { dispose: () => { clearInterval(idleTimer); clearInterval(codingTimer); } }
+    { dispose: () => {
+        clearInterval(idleTimer);
+        clearInterval(codingTimer);
+        if (breakTimer) clearTimeout(breakTimer);
+    }}
   );
 }
 
@@ -284,6 +389,7 @@ function activate(context) {
 
 function deactivate() {
   if (flashTimeout) clearTimeout(flashTimeout);
+  if (comboTimeout)  clearTimeout(comboTimeout);
 }
 
 module.exports = { activate, deactivate };
