@@ -2,7 +2,7 @@
   "name": "codecritter",
   "displayName": "CodeCritter 🐾",
   "description": "A virtual pet that lives in your status bar and reacts to how you code — with stats, streaks, achievements, and an animated dashboard.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "adnan9-63",
   "icon": "media/icon.png",
   "galleryBanner": {
@@ -46,6 +46,11 @@
         "command": "codecritter.setDailyGoal",
         "title": "CodeCritter: Set Daily Goal 🎯",
         "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.choosePetTheme",
+        "title": "CodeCritter: Choose Pet Theme 🎨",
+        "category": "CodeCritter"
       }
     ],
     "configuration": {
@@ -79,6 +84,35 @@
           "enum": ["left", "right"],
           "default": "right",
           "description": "Which side of the status bar CodeCritter appears on (requires restart)."
+        },
+        "codecritter.petTheme": {
+          "type": "string",
+          "enum": ["default", "fire", "galaxy", "nature"],
+          "enumDescriptions": [
+            "Teal — the classic CodeCritter look",
+            "Fire — warm orange and red tones",
+            "Galaxy — deep purple and indigo tones",
+            "Nature — earthy green tones"
+          ],
+          "default": "default",
+          "description": "Color theme for your CodeCritter in the dashboard."
+        },
+        "codecritter.breakReminder": {
+          "type": "boolean",
+          "default": false,
+          "description": "Remind you to take a break after extended coding sessions."
+        },
+        "codecritter.breakReminderInterval": {
+          "type": "number",
+          "default": 45,
+          "minimum": 10,
+          "maximum": 180,
+          "description": "How many minutes of continuous coding before a break reminder (requires breakReminder: true)."
+        },
+        "codecritter.weeklyReview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a weekly coding summary when you open VS Code on Monday."
         }
       }
     }
