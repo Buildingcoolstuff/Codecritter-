@@ -3,11 +3,12 @@
 # 🐾 CodeCritter
 
 **A virtual coding companion that lives in your VS Code status bar.**  
-It reacts to how you code — with real emoji, an animated pet dashboard, streaks, achievements, and daily goals.
+It reacts to how you code — with real emoji, an animated pet dashboard, streaks, achievements, daily goals, and personalized themes!
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 [![VS Code](https://img.shields.io/badge/VS%20Code-1.85+-blue.svg)](https://code.visualstudio.com/)
-[![Version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-brightgreen.svg)](CHANGELOG.md)
+[![CI Build](https://github.com/Buildingcoolstuff/Codecritter-/actions/workflows/ci.yml/badge.svg)](https://github.com/Buildingcoolstuff/Codecritter-/actions)
 
 </div>
 
@@ -18,6 +19,7 @@ It reacts to how you code — with real emoji, an animated pet dashboard, streak
 CodeCritter is a tiny virtual pet that lives in your VS Code status bar and reacts to everything you do:
 
 - **Actively typing** → 🐱 Happy
+- **Typing really fast** → ⚡ On Fire (Combo Meter!)
 - **Just saved** → 🤩 Excited (XP gained!)
 - **Errors in your code** → 😰 Struggling
 - **Fixed all errors** → 🧠 Focused
@@ -26,7 +28,7 @@ CodeCritter is a tiny virtual pet that lives in your VS Code status bar and reac
 - **Hit a milestone/daily goal** → 🥳 Celebrating
 
 **Click it** → it says hi with a motivational message.  
-**Open the Dashboard** → see your pet animated in the browser with full stats.
+**Open the Dashboard** → see your pet animated in the browser with full stats and customized color themes.
 
 ---
 
@@ -47,24 +49,40 @@ Search for **CodeCritter** in the Extensions panel (`Ctrl+Shift+X`) and click In
 ```bash
 git clone https://github.com/Buildingcoolstuff/Codecritter-.git
 cd Codecritter-
+npm install
 code .
 # Press F5 to launch in Extension Development Host
 ```
 
 ---
 
-## 🎮 Features
+## 🎮 Features (New in v1.1.0!)
 
-### 🌡️ 7 Real Emoji Moods
+### 🎨 Pet Themes (Color Skins)
+Choose a personalized color palette for your pet:
+- **Default (Teal)**, **Fire (Orange)**, **Galaxy (Purple)**, **Nature (Green)**
+- *Command: `CodeCritter: Choose Pet Theme 🎨`*
+
+### ⚡ Typing Combo Meter
+CodeCritter tracks your coding momentum! If you type rapidly without stopping, your status bar pet catches fire `⚡ 🔥` to cheer you on. 
+
+### 💧 Break Reminders
+Avoid burnout. CodeCritter can gently nudge you to take a break after continuous coding (e.g., 45 minutes) with a handy "Snooze" button. Stress-free and disabled by default.
+
+### 📅 Weekly Monday Review
+Start your week right! On Monday mornings, CodeCritter will give you a brief pop-up summarizing your all-time lines typed, files saved, and best streak (like Spotify Wrapped for your code).
+
+### 🌡️ 8 Real Emoji Moods
 
 | Emoji | Mood | When |
 |:---:|---|---|
 | 🐱 | Happy | You're actively coding |
+| ⚡ | On Fire | Typing combo streak |
 | 🤩 | Excited | Just saved a file |
 | 😑 | Bored | Idle 3+ minutes |
 | 😴 | Sleepy | Idle 10+ minutes |
 | 🧠 | Focused | Cleared all errors |
-| 😰 | Struggling | Active errors in workspace |
+| 😰 | Struggling | Active errors in visible editors |
 | 🥳 | Celebrating | Goal hit / milestone unlocked |
 
 ### 📊 Animated Dashboard
@@ -94,12 +112,6 @@ Open the dashboard with: `Ctrl+Shift+P` → **CodeCritter: Show Dashboard 📊**
 | 🌟 On Fire! | 7-day coding streak |
 | 🏆 Unstoppable | 30-day coding streak |
 
-### 🎯 Daily Goals & Streaks
-
-- Set a custom daily lines-typed goal: `CodeCritter: Set Daily Goal 🎯`
-- Critter celebrates with confetti when you hit it
-- Code on consecutive days to build your streak
-
 ### 🔒 100% Private
 
 All data is stored **locally in VS Code's globalState**. Nothing is ever sent to any server, ever.
@@ -113,7 +125,11 @@ Go to `File → Preferences → Settings` and search `codecritter`:
 | Setting | Default | Description |
 |---|---|---|
 | `codecritter.petName` | `"Critter"` | Name your CodeCritter |
+| `codecritter.petTheme` | `"default"` | Change the color skin (fire, galaxy, etc.) |
 | `codecritter.dailyGoal` | `100` | Daily lines-typed goal |
+| `codecritter.breakReminder` | `false` | Remind you to take a break after coding straight |
+| `codecritter.breakReminderInterval` | `45` | Minutes of continuous coding before a reminder |
+| `codecritter.weeklyReview` | `true` | Show a weekly stat summary on Monday mornings |
 | `codecritter.enableTips` | `true` | Show tips in hi messages |
 | `codecritter.showInStatusBar` | `true` | Toggle status bar pet |
 | `codecritter.statusBarAlignment` | `"right"` | Left or right side |
@@ -128,6 +144,7 @@ Open the Command Palette (`Ctrl+Shift+P`) and type **CodeCritter**:
 |---|---|
 | `CodeCritter: Say Hi 👋` | Pet says hi with a motivational message |
 | `CodeCritter: Show Dashboard 📊` | Opens the animated stats dashboard |
+| `CodeCritter: Choose Pet Theme 🎨`| Pick a new color scheme for your pet |
 | `CodeCritter: Set Daily Goal 🎯` | Set your daily lines goal |
 | `CodeCritter: Reset All Stats 🗑️` | Wipe everything and start over |
 
@@ -140,7 +157,6 @@ PRs and issues are very welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) to get s
 Ideas for future features:
 - More pet skins & colors
 - Optional sound effects
-- Weekly coding summary
 - Sidebar panel mode
 
 ---
