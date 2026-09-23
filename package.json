@@ -4,7 +4,6 @@
   "description": "A virtual pet that lives in your status bar and reacts to how you code — with stats, streaks, achievements, and an animated dashboard.",
   "version": "1.1.0",
   "publisher": "adnan9-63",
-  "icon": "media/icon.png",
   "galleryBanner": {
     "color": "#2d2d4a",
     "theme": "dark"
