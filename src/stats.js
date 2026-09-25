@@ -217,11 +217,35 @@ class StatsEngine {
       totalCodingMins:   this.totalCodingMins + this.getSessionMinutes(),
       currentStreak:     this.currentStreak,
       longestStreak:     this.longestStreak,
+      lastActiveDay:     this.lastActiveDay,
       milestonesReached: [...this.milestonesReached],
       dailyLinesTyped:   this.dailyLinesTyped,
+      dailyGoalHit:      this.dailyGoalHit,
+      dailyDate:         this.dailyDate,
       level:             this.getLevel(),
       xpProgress:        this.getXpProgress()
     };
+  }
+
+  /** Restores stats from a backup object. */
+  importSnapshot(data) {
+    if (!data || typeof data !== 'object') return false;
+    if (typeof data.saveCount === 'number') this.saveCount = data.saveCount;
+    if (typeof data.linesTyped === 'number') this.linesTyped = data.linesTyped;
+    if (typeof data.errorsFixed === 'number') this.errorsFixed = data.errorsFixed;
+    if (typeof data.totalCodingMins === 'number') this.totalCodingMins = data.totalCodingMins;
+    if (typeof data.currentStreak === 'number') this.currentStreak = data.currentStreak;
+    if (typeof data.longestStreak === 'number') this.longestStreak = data.longestStreak;
+    if (typeof data.lastActiveDay === 'string') this.lastActiveDay = data.lastActiveDay;
+    if (Array.isArray(data.milestonesReached)) this.milestonesReached = data.milestonesReached;
+    
+    // Also restore daily stats so backups are perfectly 1:1
+    if (typeof data.dailyLinesTyped === 'number') this.dailyLinesTyped = data.dailyLinesTyped;
+    if (typeof data.dailyGoalHit === 'boolean') this.dailyGoalHit = data.dailyGoalHit;
+    if (typeof data.dailyDate === 'string') this.dailyDate = data.dailyDate;
+    
+    this._save();
+    return true;
   }
 
   // ─── Public: Reset ────────────────────────────────────────────────────────

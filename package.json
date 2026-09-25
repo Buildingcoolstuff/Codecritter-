@@ -50,6 +50,16 @@
         "command": "codecritter.choosePetTheme",
         "title": "CodeCritter: Choose Pet Theme 🎨",
         "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.exportStats",
+        "title": "CodeCritter: Export Stats Backup 💾",
+        "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.importStats",
+        "title": "CodeCritter: Import Stats Backup 📥",
+        "category": "CodeCritter"
       }
     ],
     "configuration": {

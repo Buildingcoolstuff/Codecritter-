@@ -220,6 +220,45 @@ function activate(context) {
     }
   });
 
+  /** Export Stats */
+  const cmdExportStats = vscode.commands.registerCommand('codecritter.exportStats', async () => {
+    const snap = stats.getSnapshot();
+    const data = JSON.stringify(snap, null, 2);
+    const uri = await vscode.window.showSaveDialog({
+      defaultUri: vscode.Uri.file('codecritter-backup.json'),
+      filters: { 'JSON': ['json'] },
+      title: 'Export CodeCritter Stats'
+    });
+    if (uri) {
+      await vscode.workspace.fs.writeFile(uri, Buffer.from(data, 'utf8'));
+      vscode.window.showInformationMessage('💾 CodeCritter stats exported successfully!');
+    }
+  });
+
+  /** Import Stats */
+  const cmdImportStats = vscode.commands.registerCommand('codecritter.importStats', async () => {
+    const uris = await vscode.window.showOpenDialog({
+      canSelectMany: false,
+      filters: { 'JSON': ['json'] },
+      title: 'Import CodeCritter Stats'
+    });
+    if (uris && uris[0]) {
+      try {
+        const fileData = await vscode.workspace.fs.readFile(uris[0]);
+        const json = JSON.parse(Buffer.from(fileData).toString('utf8'));
+        if (stats.importSnapshot(json)) {
+          vscode.window.showInformationMessage('📥 CodeCritter stats imported successfully!');
+          _applyMood(currentMood);
+          updateDashboardIfOpen(stats, petName(), currentMood);
+        } else {
+          vscode.window.showErrorMessage('❌ Invalid backup file format.');
+        }
+      } catch (err) {
+        vscode.window.showErrorMessage('❌ Failed to read or parse backup file.');
+      }
+    }
+  });
+
   // ── Event: File Saved ──
   const onSave = vscode.workspace.onDidSaveTextDocument(() => {
     lastActivity = Date.now();
@@ -373,6 +412,8 @@ function activate(context) {
     cmdReset,
     cmdSetGoal,
     cmdChooseTheme,
+    cmdExportStats,
+    cmdImportStats,
     onSave,
     onChange,
     onDiagnostics,
