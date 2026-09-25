@@ -5,6 +5,41 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [2.0.0] - 2026-09-25
+
+*The massive Companion Update! Bringing new pet species, a persistent sidebar view, wearables, and interactivity to CodeCritter.*
+
+### ✨ Added
+
+#### 🐱 New Pet Species (Cat & Robot)
+- Instead of just changing colors, you can now change the actual shape of your CodeCritter!
+- New setting: `codecritter.petSpecies` (choose `alien`, `cat`, or `robot`).
+- Fully supports all existing themes (Fire, Galaxy, Nature).
+
+#### 🗂️ Sidebar Companion View
+- The CodeCritter now lives permanently in your VS Code Sidebar (Explorer view) or Activity Bar!
+- Includes the animated SVG pet, current mood, level, and XP bar.
+- No need to keep the full dashboard open to see your pet react to your code.
+
+#### 🕶️ Level-Up Accessories (Wearables)
+- Leveling up now visually rewards you with accessories worn by your pet in the dashboard and sidebar:
+  - **Level 5:** 🕶️ Cool Sunglasses
+  - **Level 10:** 🎩 Dapper Top Hat
+  - **Level 15:** 🥳 Festive Party Hat
+  - **Level 20:** 👑 Royal Crown
+
+#### 🍕 Pet Interactivity (Feed & Play)
+- New command: **CodeCritter: Feed Pet 🍕** (Instantly boosts mood to excited).
+- New command: **CodeCritter: Play with Pet 🎾** (Instantly boosts mood to celebrating).
+- Both commands flash the status bar and update the SVGs immediately.
+
+#### 💾 Local Stats Backup (Export / Import)
+- New command: **CodeCritter: Export Stats Backup 💾** (Saves your streaks and XP to a JSON file).
+- New command: **CodeCritter: Import Stats Backup 📥** (Restores your stats from a JSON file).
+- Perfect for migrating your 100-day streak to a new computer!
+
+---
+
 ## [1.1.0] — 2026-09-17
 
 *Competitor research edition — features inspired by gaps in vscode-pets, Code Tamagotchi, LevelUp, and Power Mode.*

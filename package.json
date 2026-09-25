@@ -2,7 +2,7 @@
   "name": "codecritter",
   "displayName": "CodeCritter 🐾",
   "description": "A virtual pet that lives in your status bar and reacts to how you code — with stats, streaks, achievements, and an animated dashboard.",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "publisher": "adnan9-63",
   "galleryBanner": {
     "color": "#2d2d4a",
@@ -59,6 +59,16 @@
       {
         "command": "codecritter.importStats",
         "title": "CodeCritter: Import Stats Backup 📥",
+        "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.feedPet",
+        "title": "CodeCritter: Feed Pet 🍕",
+        "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.playPet",
+        "title": "CodeCritter: Play with Pet 🎾",
         "category": "CodeCritter"
       }
     ],

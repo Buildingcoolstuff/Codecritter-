@@ -7,7 +7,7 @@ It reacts to how you code — with real emoji, an animated pet dashboard, streak
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 [![VS Code](https://img.shields.io/badge/VS%20Code-1.85+-blue.svg)](https://code.visualstudio.com/)
-[![Version](https://img.shields.io/badge/version-1.1.0-brightgreen.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.0.0-brightgreen.svg)](CHANGELOG.md)
 [![CI Build](https://github.com/Buildingcoolstuff/Codecritter-/actions/workflows/ci.yml/badge.svg)](https://github.com/Buildingcoolstuff/Codecritter-/actions)
 
 </div>
@@ -56,7 +56,26 @@ code .
 
 ---
 
-## 🎮 Features (New in v1.1.0!)
+## ✨ Features (New in v2.0.0!)
+
+### 🗂️ Sidebar Companion View
+The CodeCritter now lives permanently in your VS Code Sidebar! No need to keep the dashboard panel open — just drag the CodeCritter icon to your Activity Bar or Explorer.
+
+### 🐱 Pet Species & 🎩 Wearables
+- **Species:** Change the actual shape of your pet. Choose between an `alien`, `cat`, or `robot`.
+- **Level-Up Accessories:** Earning XP and leveling up now unlocks cosmetic accessories worn by your pet, like sunglasses (Lv 5), a top hat (Lv 10), and a crown (Lv 20)!
+
+### 🍕 Interactivity
+You can now directly interact with your pet!
+- **CodeCritter: Feed Pet 🍕**
+- **CodeCritter: Play with Pet 🎾**
+
+### 💾 Backup Stats
+Export your hard-earned XP and streaks to a JSON file and import them anywhere.
+
+---
+
+## 🎮 Features (v1.1.0)
 
 ### 🎨 Pet Themes (Color Skins)
 Choose a personalized color palette for your pet:
