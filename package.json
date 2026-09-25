@@ -62,6 +62,25 @@
         "category": "CodeCritter"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codecritter-view-container",
+          "title": "CodeCritter",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codecritter-view-container": [
+        {
+          "type": "webview",
+          "id": "codecritter.sidebarView",
+          "name": "CodeCritter Companion",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
     "configuration": {
       "title": "CodeCritter",
       "properties": {

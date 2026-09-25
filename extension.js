@@ -5,6 +5,7 @@ const { StatsEngine }                                = require('./src/stats');
 const { getMoodDisplay, checkMilestones,
         getRandomHiMessage, getRandomTip, PET_THEMES } = require('./src/moods');
 const { showDashboard, updateDashboardIfOpen }       = require('./src/dashboard');
+const { SidebarProvider }                            = require('./src/sidebar');
 
 /** @type {vscode.StatusBarItem} */
 let statusBarItem;
@@ -147,6 +148,12 @@ function activate(context) {
   // Show weekly review on startup
   maybeShowWeeklyReview();
 
+  // ── Sidebar Provider ──
+  const sidebarProvider = new SidebarProvider(context, stats, () => petName(), () => currentMood);
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider('codecritter.sidebarView', sidebarProvider)
+  );
+
   // ── Commands ──
 
   /** Say hi — click on status bar */
@@ -177,6 +184,7 @@ function activate(context) {
       _applyMood('happy');
       vscode.window.showInformationMessage('🐾 Stats reset! Starting fresh from Level 1.');
       updateDashboardIfOpen(stats, petName(), 'happy');
+      sidebarProvider.update();
     }
   });
 
@@ -217,6 +225,7 @@ function activate(context) {
       vscode.window.showInformationMessage(`🎨 Pet theme changed to ${picked.label}!`);
       _applyMood(currentMood); // refresh tooltip
       updateDashboardIfOpen(stats, petName(), currentMood);
+      sidebarProvider.update();
     }
   });
 
@@ -250,6 +259,7 @@ function activate(context) {
           vscode.window.showInformationMessage('📥 CodeCritter stats imported successfully!');
           _applyMood(currentMood);
           updateDashboardIfOpen(stats, petName(), currentMood);
+          sidebarProvider.update();
         } else {
           vscode.window.showErrorMessage('❌ Invalid backup file format.');
         }
@@ -267,6 +277,7 @@ function activate(context) {
     const snap = stats.getSnapshot();
     checkAndShowMilestones(snap);
     updateDashboardIfOpen(stats, petName(), currentMood);
+    sidebarProvider.update();
   });
 
   // ── Event: Text Changed (typing) ──
@@ -306,6 +317,7 @@ function activate(context) {
       const snap = stats.getSnapshot();
       checkAndShowMilestones(snap);
       updateDashboardIfOpen(stats, petName(), currentMood);
+      sidebarProvider.update();
     }
   });
 
@@ -327,6 +339,7 @@ function activate(context) {
       const snap = stats.getSnapshot();
       checkAndShowMilestones(snap);
       updateDashboardIfOpen(stats, petName(), currentMood);
+      sidebarProvider.update();
     }
     prevErrorCount = errorCount;
 
@@ -361,6 +374,7 @@ function activate(context) {
     if (target !== currentMood) {
       currentMood = target;
       _applyMood(currentMood);
+      sidebarProvider.update();
     }
   }, 30_000);
 
@@ -402,6 +416,7 @@ function activate(context) {
     show ? statusBarItem.show() : statusBarItem.hide();
     _applyMood(currentMood); // rebuild text/tooltip for petName/theme changes
     updateDashboardIfOpen(stats, petName(), currentMood); // refresh theme in dashboard
+    sidebarProvider.update();
   });
 
   // ── Register everything ──
