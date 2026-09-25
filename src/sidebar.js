@@ -27,6 +27,13 @@ class SidebarProvider {
       enableScripts: true,
       localResourceRoots: [this.context.extensionUri]
     };
+
+    webviewView.webview.onDidReceiveMessage(msg => {
+      if (msg.command === 'openDashboard') {
+        vscode.commands.executeCommand('codecritter.showDashboard');
+      }
+    }, undefined, this.context.subscriptions);
+
     this.update();
   }
 
@@ -41,6 +48,9 @@ class SidebarProvider {
     const stats = this.stats.getSnapshot();
     const currentMood = this.getCurrentMood();
     const petName = this.getPetName();
+
+    const { getPetSvg, getAccessoriesSvg } = require('./pets');
+    const petSvgRaw = getPetSvg(petSpecies).replace('__ACCESSORIES__', getAccessoriesSvg(stats.level));
 
     const htmlPath = path.join(__dirname, '..', 'media', 'sidebar.html');
     let html = 'Sidebar HTML not found.';
@@ -58,7 +68,8 @@ class SidebarProvider {
       '__THEME_ACCENT__':    theme.accent,
       '__THEME_ANTENNAE__':  theme.antennae,
       '__THEME_LABEL__':     _esc(theme.label),
-      '__PET_SPECIES__':     _esc(petSpecies)
+      '__PET_SPECIES__':     _esc(petSpecies),
+      '__PET_SVG__':         petSvgRaw
     };
 
     for (const [key, value] of Object.entries(replacements)) {

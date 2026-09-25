@@ -85,6 +85,10 @@ function _updatePanel(statsEngine, petName, currentMood) {
   // Pet theme colors
   const themeKey  = config.get('petTheme', 'default');
   const theme     = PET_THEMES[themeKey] || PET_THEMES.default;
+  const petSpecies = config.get('petSpecies', 'alien');
+
+  const { getPetSvg, getAccessoriesSvg } = require('./pets');
+  const petSvgRaw = getPetSvg(petSpecies).replace('__ACCESSORIES__', getAccessoriesSvg(stats.level));
 
   const milestoneData = MILESTONES.map(m => ({
     id:       m.id,
@@ -121,6 +125,7 @@ function _updatePanel(statsEngine, petName, currentMood) {
     '__THEME_ACCENT__':    theme.accent,
     '__THEME_ANTENNAE__':  theme.antennae,
     '__THEME_LABEL__':     _esc(theme.label),
+    '__PET_SVG__':         petSvgRaw,
     '__MILESTONES_JSON__': JSON.stringify(milestoneData)
   };
 

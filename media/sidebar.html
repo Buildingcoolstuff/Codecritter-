@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --pet-body:      __THEME_BODY__;
+    --pet-body-alt:  __THEME_BODY_ALT__;
+    --pet-accent:    __THEME_ACCENT__;
+    --pet-antennae:  __THEME_ANTENNAE__;
+  }
+  body {
+    font-family: var(--vscode-font-family, 'Segoe UI', system-ui, sans-serif);
+    color: var(--vscode-foreground);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .pet-svg-wrap {
+    margin: 10px 0 20px 0;
+    width: 100%;
+    max-width: 150px;
+  }
+  .pet-svg-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Animations */
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  .pet-happy       { animation: bob 3s infinite ease-in-out; }
+  .pet-focused     { animation: bob 2.5s infinite ease-in-out; }
+  .pet-excited     { animation: bob 0.8s infinite ease-in-out; }
+  .pet-celebrating { animation: bob 0.5s infinite ease-in-out; }
+  .pet-bored       { animation: bob 4s infinite ease-in-out; }
+  .pet-sleepy      { animation: bob 5s infinite ease-in-out; }
+  .pet-struggling  { animation: bob 0.4s infinite ease-in-out; }
+  .pet-comboTyping { animation: bob 0.2s infinite ease-in-out; }
+
+  .info-box {
+    width: 100%;
+    background: var(--vscode-editor-background);
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid var(--vscode-widget-border);
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  .xp-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--vscode-editor-lineHighlightBackground);
+    border-radius: 4px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .xp-fill {
+    height: 100%;
+    background: var(--pet-antennae);
+    transition: width 0.3s ease;
+  }
+  .btn {
+    background: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+  .btn:hover {
+    background: var(--vscode-button-hoverBackground);
+  }
+</style>
+</head>
+<body>
+  <h2 style="margin: 0; font-size: 1.2rem;">__PET_NAME__</h2>
+  <div style="font-size: 0.85rem; opacity: 0.8; margin-top: 5px;">
+    Mood: <strong>__CURRENT_MOOD__</strong>
+  </div>
+  
+  <div class="pet-svg-wrap">
+    <svg id="critter" viewBox="0 0 140 155" class="pet-__CURRENT_MOOD__" xmlns="http://www.w3.org/2000/svg">
+      __PET_SVG__
+    </svg>
+  </div>
+  
+  <div class="info-box">
+    <div style="font-weight: bold; margin-bottom: 5px;">Level __LEVEL__</div>
+    <div class="xp-bar">
+      <div class="xp-fill" style="width: __XP_PROGRESS__%"></div>
+    </div>
+    <div style="margin-top: 5px; font-size: 0.75rem; opacity: 0.8;">__XP_PROGRESS__% to next level</div>
+  </div>
+
+  <button class="btn" onclick="openDashboard()">dY"S Full Dashboard</button>
+
+  <script>
+    const vscode = acquireVsCodeApi();
+    
+    // Apply overlays/mouth just like the dashboard based on the mood injected
+    const m = '__CURRENT_MOOD__';
+    const overlayMap = {
+      excited:     ['ov-stars'],
+      celebrating: ['ov-stars', 'ov-confetti'],
+      sleepy:      ['ov-zzz'],
+      struggling:  ['ov-bugs'],
+      focused:     ['ov-lightning'],
+      bored:       ['ov-bored'],
+      happy:       []
+    };
+    ['ov-stars','ov-zzz','ov-bugs','ov-lightning','ov-confetti','ov-bored']
+      .forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+    (overlayMap[m] || []).forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ''; });
+
+    const mouthMap = {
+      happy:       'mouth-happy',
+      excited:     'mouth-open',
+      celebrating: 'mouth-open',
+      bored:       'mouth-flat',
+      sleepy:      'mouth-flat',
+      struggling:  'mouth-sad',
+      focused:     'mouth-happy'
+    };
+    ['mouth-happy','mouth-sad','mouth-open','mouth-flat']
+      .forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+    const mouthId = mouthMap[m] || 'mouth-happy';
+    const mEl = document.getElementById(mouthId); if(mEl) mEl.style.display = '';
+
+    function openDashboard() {
+        // Unfortunately webview views can't easily trigger commands without the extension handling it.
+        // I need to add a message listener in sidebar.js to handle this.
+        vscode.postMessage({ command: 'openDashboard' });
+    }
+  </script>
+</body>
+</html>

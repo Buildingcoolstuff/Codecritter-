@@ -125,6 +125,17 @@
           "default": "default",
           "description": "Color theme for your CodeCritter in the dashboard."
         },
+        "codecritter.petSpecies": {
+          "type": "string",
+          "enum": ["alien", "cat", "robot"],
+          "enumDescriptions": [
+            "Alien — The classic CodeCritter",
+            "Cat — A purrfect coding companion",
+            "Robot — A mechanical friend"
+          ],
+          "default": "alien",
+          "description": "Choose the shape/species of your CodeCritter (requires refresh/re-open of dashboard)."
+        },
         "codecritter.breakReminder": {
           "type": "boolean",
           "default": false,
