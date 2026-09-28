@@ -7,7 +7,7 @@ Thanks for wanting to improve CodeCritter! Contributions of all kinds are welcom
 ## 🚀 Getting Started
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (any recent LTS)
+- [Node.js](https://nodejs.org/) (v20.0.0 or higher)
 - [VS Code](https://code.visualstudio.com/) (1.85+)
 - Git
 
