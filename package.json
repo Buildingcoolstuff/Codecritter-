@@ -18,7 +18,8 @@
   },
   "license": "MIT",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.85.0",
+    "node": ">=20.0.0"
   },
   "categories": ["Other", "Visualization"],
   "keywords": ["pet", "fun", "gamification", "status bar", "productivity", "tamagotchi", "companion", "critter", "motivation", "streak"],
