@@ -1,5 +1,5 @@
 ---
-name: Feature Request
+name: Feature request
 about: Suggest an idea for CodeCritter
 title: '[FEATURE] '
 labels: enhancement
@@ -10,7 +10,7 @@ assignees: ''
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
 **Describe the solution you'd like**
-A clear and concise description of what you want to happen (e.g., a new mood, a new pet theme, a new dashboard stat).
+A clear and concise description of what you want to happen.
 
 **Describe alternatives you've considered**
 A clear and concise description of any alternative solutions or features you've considered.
