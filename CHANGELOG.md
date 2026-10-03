@@ -42,8 +42,6 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [1.1.0] — 2026-09-17
 
-*Competitor research edition — features inspired by gaps in vscode-pets, Code Tamagotchi, LevelUp, and Power Mode.*
-
 ### ✨ Added
 
 #### 🎨 Pet Theme Selector (4 skins)
@@ -54,7 +52,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 #### ⚡ Typing Combo Meter
 - When typing at least 2 new lines rapidly, the status bar flashes `⚡ 🔥` (comboTyping mood)
-- Unique feature not found in any competitor — gives instant positive feedback for momentum
+- Gives instant positive feedback for momentum
 - Resets automatically after 4 seconds of inactivity
 
 #### 💧 Break Reminder System
