@@ -71,6 +71,11 @@
         "command": "codecritter.playPet",
         "title": "CodeCritter: Play with Pet 🎾",
         "category": "CodeCritter"
+      },
+      {
+        "command": "codecritter.petName",
+        "title": "CodeCritter: Rename Pet ✏️",
+        "category": "CodeCritter"
       }
     ],
     "viewsContainers": {

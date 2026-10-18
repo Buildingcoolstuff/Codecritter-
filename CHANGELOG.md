@@ -5,6 +5,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### ✨ Added
+- New command: **CodeCritter: Rename Pet ✏️** to rename your pet.
+
+---
+
 ## [2.0.0] - 2026-09-25
 
 *The massive Companion Update! Bringing new pet species, a persistent sidebar view, wearables, and interactivity to CodeCritter.*

@@ -269,6 +269,26 @@ function activate(context) {
     }
   });
 
+  /** Rename the pet using an input box */
+  const cmdRenamePet = vscode.commands.registerCommand('codecritter.petName', async () => {
+    const current = petName();
+    const val = await vscode.window.showInputBox({
+      title:   'CodeCritter — Rename Pet Name',
+      prompt: 'What would you like to name your pet?',
+      value:   current,
+      validateInput: v => {
+        if (v.trim() === '') return 'Pet name cannot be empty.';
+        if (v.trim().length > 20) return 'Pet name must be 20 characters max.';
+        return null;
+      }
+    });
+    if (val !== undefined) {
+      const newName = val.trim();
+      await cfg().update('petName', newName, vscode.ConfigurationTarget.Global);
+      vscode.window.showInformationMessage(`✏️ Your pet has been renamed to ${newName}!`);
+    }
+  });
+
   // ── Event: File Saved ──
   const onSave = vscode.workspace.onDidSaveTextDocument(() => {
     lastActivity = Date.now();
@@ -429,6 +449,7 @@ function activate(context) {
     cmdChooseTheme,
     cmdExportStats,
     cmdImportStats,
+    cmdRenamePet,
     onSave,
     onChange,
     onDiagnostics,
