@@ -323,14 +323,18 @@ function activate(context) {
 
   // ── Event: Diagnostics (errors/warnings) ──
   const onDiagnostics = vscode.languages.onDidChangeDiagnostics(() => {
-    // Only scan diagnostics from open editors to avoid noisy workspace-wide counts
-    const openUris = vscode.window.visibleTextEditors.map(e => e.document.uri.toString());
-    const allDiags = vscode.languages.getDiagnostics();
-    const errorCount = allDiags
-      .filter(([uri]) => openUris.includes(uri.toString()))
-      .flatMap(([, diags]) => diags)
-      .filter(d => d.severity === vscode.DiagnosticSeverity.Error)
-      .length;
+    // Query each visible document once, even when it is open in split editors.
+    const seen = new Set();
+    let errorCount = 0;
+    for (const editor of vscode.window.visibleTextEditors) {
+      const uri = editor.document.uri;
+      const key = uri.toString();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      for (const diagnostic of vscode.languages.getDiagnostics(uri)) {
+        if (diagnostic.severity === vscode.DiagnosticSeverity.Error) errorCount++;
+      }
+    }
 
     // Award credit for errors fixed
     if (errorCount < prevErrorCount) {
