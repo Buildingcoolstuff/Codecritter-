@@ -31,6 +31,7 @@ class StatsEngine {
     this.sessionStart = Date.now();
     this._load();
     this._checkDayRollover();
+    this._checkStreakExpiry();
   }
 
   // ─── Private: Load & Save ────────────────────────────────────────────────
@@ -80,6 +81,25 @@ class StatsEngine {
       this.dailyLinesTyped = 0;
       this.dailyGoalHit    = false;
       this.dailyDate       = today;
+      this._checkStreakExpiry();
+      this._save();
+    }
+  }
+
+  /**
+   * Resets active streak to 0 if 2 or more days have elapsed since last activity.
+   */
+  _checkStreakExpiry() {
+    if (!this.lastActiveDay) return;
+    const today = this._today();
+    if (this.lastActiveDay === today) return;
+
+    const last = new Date(this.lastActiveDay + 'T00:00:00');
+    const now  = new Date(today + 'T00:00:00');
+    const diffDays = Math.round((now - last) / 86400000);
+
+    if (diffDays >= 2 && this.currentStreak > 0) {
+      this.currentStreak = 0;
       this._save();
     }
   }
@@ -210,11 +230,13 @@ class StatsEngine {
 
   /** Returns a plain-object snapshot of all stats (safe to pass to webview). */
   getSnapshot() {
+    this._checkDayRollover();
+    this._checkStreakExpiry();
     return {
       saveCount:         this.saveCount,
       linesTyped:        this.linesTyped,
       errorsFixed:       this.errorsFixed,
-      totalCodingMins:   this.totalCodingMins + this.getSessionMinutes(),
+      totalCodingMins:   this.totalCodingMins,
       currentStreak:     this.currentStreak,
       longestStreak:     this.longestStreak,
       lastActiveDay:     this.lastActiveDay,

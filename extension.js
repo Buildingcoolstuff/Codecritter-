@@ -269,6 +269,26 @@ function activate(context) {
     }
   });
 
+  /** Feed Pet */
+  const cmdFeedPet = vscode.commands.registerCommand('codecritter.feedPet', () => {
+    vscode.window.showInformationMessage(`🍕 You fed ${petName()}! Nom nom nom.`);
+    setMood('excited', true);
+    updateDashboardIfOpen(stats, petName(), 'excited');
+    sidebarProvider.update();
+    if (comboTimeout) clearTimeout(comboTimeout);
+    comboTimeout = setTimeout(() => { comboTimeout = null; }, 5000); // stay excited for 5s
+  });
+
+  /** Play Pet */
+  const cmdPlayPet = vscode.commands.registerCommand('codecritter.playPet', () => {
+    vscode.window.showInformationMessage(`🎾 You played with ${petName()}! So much fun!`);
+    setMood('celebrating', true);
+    updateDashboardIfOpen(stats, petName(), 'celebrating');
+    sidebarProvider.update();
+    if (comboTimeout) clearTimeout(comboTimeout);
+    comboTimeout = setTimeout(() => { comboTimeout = null; }, 5000);
+  });
+
   // ── Event: File Saved ──
   const onSave = vscode.workspace.onDidSaveTextDocument(() => {
     lastActivity = Date.now();
@@ -433,6 +453,8 @@ function activate(context) {
     cmdChooseTheme,
     cmdExportStats,
     cmdImportStats,
+    cmdFeedPet,
+    cmdPlayPet,
     onSave,
     onChange,
     onDiagnostics,
