@@ -17,6 +17,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Query diagnostics only for visible documents and count split editors once per document, avoiding a workspace-wide scan on every diagnostics event.
 - Fix double-counting of session coding time in `StatsEngine.getSnapshot()` (Fixes #22).
 - Automatically recalculate and reset inactive streaks to 0 after 2 or more days without activity (Fixes #24).
+- Dispose previous Sidebar webview message listener on view reopen to prevent memory leaks (Fixes #30).
 
 ---
 
