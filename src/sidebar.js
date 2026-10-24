@@ -4,6 +4,7 @@ const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
 const { PET_THEMES } = require('./moods');
+const { getPetSvg, getAccessoriesSvg } = require('./pets');
 
 class SidebarProvider {
   /**
@@ -19,6 +20,8 @@ class SidebarProvider {
     this.getCurrentMood = getCurrentMood;
     /** @type {vscode.WebviewView | undefined} */
     this._view = undefined;
+    /** @type {vscode.Disposable | undefined} */
+    this._messageListener = undefined;
   }
 
   resolveWebviewView(webviewView) {
@@ -28,13 +31,35 @@ class SidebarProvider {
       localResourceRoots: [this.context.extensionUri]
     };
 
-    webviewView.webview.onDidReceiveMessage(msg => {
+    // Dispose any previous message listener to prevent memory leaks on view reopen
+    if (this._messageListener) {
+      this._messageListener.dispose();
+      this._messageListener = undefined;
+    }
+
+    this._messageListener = webviewView.webview.onDidReceiveMessage(msg => {
       if (msg.command === 'openDashboard') {
         vscode.commands.executeCommand('codecritter.showDashboard');
       }
-    }, undefined, this.context.subscriptions);
+    });
+
+    webviewView.onDidDispose(() => {
+      if (this._messageListener) {
+        this._messageListener.dispose();
+        this._messageListener = undefined;
+      }
+      this._view = undefined;
+    });
 
     this.update();
+  }
+
+  dispose() {
+    if (this._messageListener) {
+      this._messageListener.dispose();
+      this._messageListener = undefined;
+    }
+    this._view = undefined;
   }
 
   update() {
@@ -49,7 +74,6 @@ class SidebarProvider {
     const currentMood = this.getCurrentMood();
     const petName = this.getPetName();
 
-    const { getPetSvg, getAccessoriesSvg } = require('./pets');
     const petSvgRaw = getPetSvg(petSpecies).replace('__ACCESSORIES__', getAccessoriesSvg(stats.level));
 
     const htmlPath = path.join(__dirname, '..', 'media', 'sidebar.html');

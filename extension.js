@@ -469,6 +469,7 @@ function activate(context) {
   // ── Register everything ──
   context.subscriptions.push(
     statusBarItem,
+    sidebarProvider,
     cmdSayHi,
     cmdDashboard,
     cmdReset,
