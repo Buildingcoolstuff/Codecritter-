@@ -18,6 +18,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fix double-counting of session coding time in `StatsEngine.getSnapshot()` (Fixes #22).
 - Automatically recalculate and reset inactive streaks to 0 after 2 or more days without activity (Fixes #24).
 - Dispose previous Sidebar webview message listener on view reopen to prevent memory leaks (Fixes #30).
+- Add configurable Weekend Streak Protection (codecritter.weekendStreakProtection) to protect streaks over Saturday and Sunday (Fixes #31).
 
 ---
 

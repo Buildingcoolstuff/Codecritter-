@@ -80,3 +80,45 @@ test('Issue #24: streak continues when active on consecutive days (yesterday -> 
   assert.equal(snapshot.currentStreak, 5, 'consecutive day activity increments streak');
   assert.equal(snapshot.longestStreak, 5, 'longest streak updates when current exceeds it');
 });
+
+test('Issue #31: weekend streak protection preserves streak from Friday to Monday', () => {
+  const context = createMockContext({
+    'codecritter.currentStreak': 5,
+    'codecritter.longestStreak': 5,
+    'codecritter.lastActiveDay': '2026-10-16' // Friday
+  });
+
+  // Today is Monday (2026-10-19)
+  const stats = new StatsEngine(context, {
+    today: '2026-10-19',
+    weekendStreakProtection: true
+  });
+
+  const snapshot = stats.getSnapshot();
+  assert.equal(snapshot.currentStreak, 5, 'Friday streak must be protected on Monday before coding');
+
+  // Activity on Monday increments the streak to 6
+  stats.recordSave();
+  assert.equal(stats.getSnapshot().currentStreak, 6, 'Friday to Monday coding activity increments streak');
+});
+
+test('Issue #31: streak resets from Friday to Monday if weekendStreakProtection is disabled', () => {
+  const context = createMockContext({
+    'codecritter.currentStreak': 5,
+    'codecritter.longestStreak': 5,
+    'codecritter.lastActiveDay': '2026-10-16' // Friday
+  });
+
+  // Today is Monday (2026-10-19) with protection disabled
+  const stats = new StatsEngine(context, {
+    today: '2026-10-19',
+    weekendStreakProtection: false
+  });
+
+  const snapshot = stats.getSnapshot();
+  assert.equal(snapshot.currentStreak, 0, 'Streak resets to 0 on Monday when weekend protection is disabled');
+
+  // Coding on Monday starts streak at 1
+  stats.recordSave();
+  assert.equal(stats.getSnapshot().currentStreak, 1, 'Streak restarts at 1 when protection disabled');
+});
