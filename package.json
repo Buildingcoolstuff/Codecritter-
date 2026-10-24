@@ -21,9 +21,25 @@
     "vscode": "^1.85.0",
     "node": ">=20.0.0"
   },
-  "categories": ["Other", "Visualization"],
-  "keywords": ["pet", "fun", "gamification", "status bar", "productivity", "tamagotchi", "companion", "critter", "motivation", "streak"],
-  "activationEvents": ["onStartupFinished"],
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "keywords": [
+    "pet",
+    "fun",
+    "gamification",
+    "status bar",
+    "productivity",
+    "tamagotchi",
+    "companion",
+    "critter",
+    "motivation",
+    "streak"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./extension.js",
   "scripts": {
     "test": "node --test"
@@ -128,13 +144,21 @@
         },
         "codecritter.statusBarAlignment": {
           "type": "string",
-          "enum": ["left", "right"],
+          "enum": [
+            "left",
+            "right"
+          ],
           "default": "right",
           "description": "Which side of the status bar CodeCritter appears on (requires restart)."
         },
         "codecritter.petTheme": {
           "type": "string",
-          "enum": ["default", "fire", "galaxy", "nature"],
+          "enum": [
+            "default",
+            "fire",
+            "galaxy",
+            "nature"
+          ],
           "enumDescriptions": [
             "Teal — the classic CodeCritter look",
             "Fire — warm orange and red tones",
@@ -146,7 +170,11 @@
         },
         "codecritter.petSpecies": {
           "type": "string",
-          "enum": ["alien", "cat", "robot"],
+          "enum": [
+            "alien",
+            "cat",
+            "robot"
+          ],
           "enumDescriptions": [
             "Alien — The classic CodeCritter",
             "Cat — A purrfect coding companion",
@@ -171,6 +199,11 @@
           "type": "boolean",
           "default": true,
           "description": "Show a weekly coding summary when you open VS Code on Monday."
+        },
+        "codecritter.weekendStreakProtection": {
+          "type": "boolean",
+          "default": true,
+          "description": "Protect your coding streak over the weekend (Saturday & Sunday) so taking weekends off won't break your streak."
         }
       }
     }

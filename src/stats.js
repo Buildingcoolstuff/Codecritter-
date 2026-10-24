@@ -26,7 +26,11 @@ class StatsEngine {
   /**
    * @param {import('vscode').ExtensionContext} context
    */
-  constructor(context) {
+  constructor(context, options = {}) {
+    if (options.today) this._todayDateOverride = options.today;
+    if (options.weekendStreakProtection !== undefined) {
+      this._overrideWeekendProtection = options.weekendStreakProtection;
+    }
     this.context = context;
     this.sessionStart = Date.now();
     this._load();
@@ -70,6 +74,7 @@ class StatsEngine {
 
   /** Returns today's ISO date string (YYYY-MM-DD) in local time. */
   _today() {
+    if (this._todayDateOverride) return this._todayDateOverride;
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
@@ -87,7 +92,47 @@ class StatsEngine {
   }
 
   /**
-   * Resets active streak to 0 if 2 or more days have elapsed since last activity.
+   * Returns whether weekend streak protection is enabled in settings.
+   */
+  get weekendStreakProtection() {
+    if (this._overrideWeekendProtection !== undefined) {
+      return this._overrideWeekendProtection;
+    }
+    try {
+      const vscode = require('vscode');
+      return vscode.workspace.getConfiguration('codecritter').get('weekendStreakProtection', true);
+    } catch {
+      return true;
+    }
+  }
+
+  setWeekendStreakProtection(enabled) {
+    this._overrideWeekendProtection = enabled;
+  }
+
+  /**
+   * Determines if the span between lastDate and todayDate falls under weekend grace.
+   */
+  _isWeekendGrace(lastDate, todayDate) {
+    const lastDay = lastDate.getDay();   // 0 = Sun, 5 = Fri, 6 = Sat
+    const diffDays = Math.round((todayDate - lastDate) / 86400000);
+
+    // If last active was Friday: Sat (diff 1), Sun (diff 2), Mon (diff 3)
+    if (lastDay === 5 && (diffDays === 1 || diffDays === 2 || diffDays === 3)) {
+      return true;
+    }
+
+    // If last active was Saturday: Sun (diff 1), Mon (diff 2)
+    if (lastDay === 6 && (diffDays === 1 || diffDays === 2)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Resets active streak to 0 if 2 or more days have elapsed since last activity,
+   * taking weekend protection into account if enabled.
    */
   _checkStreakExpiry() {
     if (!this.lastActiveDay) return;
@@ -98,7 +143,9 @@ class StatsEngine {
     const now  = new Date(today + 'T00:00:00');
     const diffDays = Math.round((now - last) / 86400000);
 
-    if (diffDays >= 2 && this.currentStreak > 0) {
+    const weekendGrace = this.weekendStreakProtection && this._isWeekendGrace(last, now);
+
+    if (diffDays >= 2 && !weekendGrace && this.currentStreak > 0) {
       this.currentStreak = 0;
       this._save();
     }
@@ -106,7 +153,7 @@ class StatsEngine {
 
   /**
    * Updates the coding streak based on the last active day.
-   * Increments streak if yesterday, resets if 2+ days ago.
+   * Increments streak if yesterday (or via weekend grace), resets if broken.
    */
   _updateStreak() {
     const today = this._today();
@@ -116,8 +163,11 @@ class StatsEngine {
       const last = new Date(this.lastActiveDay + 'T00:00:00');
       const now  = new Date(today + 'T00:00:00');
       const diffDays = Math.round((now - last) / 86400000);
-      if (diffDays === 1) {
-        this.currentStreak++; // consecutive day
+
+      const weekendGrace = this.weekendStreakProtection && this._isWeekendGrace(last, now);
+
+      if (diffDays === 1 || weekendGrace) {
+        this.currentStreak++; // consecutive day or protected weekend bridge
       } else {
         this.currentStreak = 1; // streak broken — reset
       }
