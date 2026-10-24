@@ -25,6 +25,9 @@
   "keywords": ["pet", "fun", "gamification", "status bar", "productivity", "tamagotchi", "companion", "critter", "motivation", "streak"],
   "activationEvents": ["onStartupFinished"],
   "main": "./extension.js",
+  "scripts": {
+    "test": "node --test"
+  },
   "contributes": {
     "commands": [
       {
