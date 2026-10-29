@@ -112,3 +112,19 @@ test('Issue #28: media/sidebar.html renders clean UTF-8 emojis without Mojibake 
   assert.equal(sidebarHtml.includes('dY"S'), false, 'must not contain Mojibake dY"S');
   assert.equal(sidebarHtml.includes('📊 Full Dashboard'), true, 'must render standard 📊 Full Dashboard button');
 });
+
+test('Issue #29: media/sidebar.html includes strict Content-Security-Policy meta tag', () => {
+  const sidebarHtml = fs.readFileSync(path.join(__dirname, '..', 'media', 'sidebar.html'), 'utf8');
+  assert.match(
+    sidebarHtml,
+    /<meta\s+http-equiv=["']Content-Security-Policy["']/i,
+    'sidebar.html must define a Content-Security-Policy'
+  );
+});
+
+test('Issue #29: .vscodeignore excludes internal scripts, tests, and CI workflows', () => {
+  const vscodeignore = fs.readFileSync(path.join(__dirname, '..', '.vscodeignore'), 'utf8');
+  assert.ok(vscodeignore.includes('scripts/**'), '.vscodeignore must exclude scripts/**');
+  assert.ok(vscodeignore.includes('.github/**'), '.vscodeignore must exclude .github/**');
+  assert.ok(vscodeignore.includes('tests/**'), '.vscodeignore must exclude tests/**');
+});
