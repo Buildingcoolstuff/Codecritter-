@@ -2,4 +2,8 @@
 node_modules/**
 *.vsix
 CONTRIBUTING.md
+CODE_OF_CONDUCT.md
 .gitignore
+.github/**
+scripts/**
+tests/**
