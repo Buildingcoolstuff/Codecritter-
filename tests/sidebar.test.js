@@ -106,3 +106,9 @@ test('Issue #30: SidebarProvider disposes previous message listener when view is
   provider.dispose();
   assert.equal(secondListenerDisposed, true, 'provider.dispose() must dispose active listener');
 });
+
+test('Issue #28: media/sidebar.html renders clean UTF-8 emojis without Mojibake artifacts', () => {
+  const sidebarHtml = fs.readFileSync(path.join(__dirname, '..', 'media', 'sidebar.html'), 'utf8');
+  assert.equal(sidebarHtml.includes('dY"S'), false, 'must not contain Mojibake dY"S');
+  assert.equal(sidebarHtml.includes('📊 Full Dashboard'), true, 'must render standard 📊 Full Dashboard button');
+});
