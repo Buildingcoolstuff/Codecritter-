@@ -22,6 +22,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Clean up corrupted Unicode Mojibake artifacts in media/sidebar.html (Fixes #28).
 - Update .vscodeignore to exclude internal scripts/tests/CI and add Content-Security-Policy to sidebar webview (Fixes #29).
 - Fix pet mood duration and unlock typing combo meter in Feed/Play commands (Fixes #23).
+- Fix accessory positioning and eye-blink transform-origins for Cat and Robot pet species (Fixes #27).
 
 ---
 
