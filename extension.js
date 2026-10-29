@@ -67,14 +67,17 @@ function _applyMood(moodKey) {
  * @param {string}  moodKey
  * @param {boolean} [temporary=false]
  */
-function setMood(moodKey, temporary = false) {
+function setMood(moodKey, temporary = false, durationMs = 2500, onRevert = null) {
   if (temporary) {
     if (flashTimeout) clearTimeout(flashTimeout);
     _applyMood(moodKey);
     flashTimeout = setTimeout(() => {
       flashTimeout = null;
       _applyMood(currentMood);
-    }, 2500);
+      if (typeof onRevert === 'function') {
+        onRevert();
+      }
+    }, durationMs);
   } else {
     if (flashTimeout) return; // don't override a flash
     currentMood = moodKey;
@@ -295,21 +298,23 @@ function activate(context) {
   /** Feed Pet */
   const cmdFeedPet = vscode.commands.registerCommand('codecritter.feedPet', () => {
     vscode.window.showInformationMessage(`🍕 You fed ${petName()}! Nom nom nom.`);
-    setMood('excited', true);
+    setMood('excited', true, 5000, () => {
+      updateDashboardIfOpen(stats, petName(), currentMood);
+      sidebarProvider.update();
+    });
     updateDashboardIfOpen(stats, petName(), 'excited');
     sidebarProvider.update();
-    if (comboTimeout) clearTimeout(comboTimeout);
-    comboTimeout = setTimeout(() => { comboTimeout = null; }, 5000); // stay excited for 5s
   });
 
   /** Play Pet */
   const cmdPlayPet = vscode.commands.registerCommand('codecritter.playPet', () => {
     vscode.window.showInformationMessage(`🎾 You played with ${petName()}! So much fun!`);
-    setMood('celebrating', true);
+    setMood('celebrating', true, 5000, () => {
+      updateDashboardIfOpen(stats, petName(), currentMood);
+      sidebarProvider.update();
+    });
     updateDashboardIfOpen(stats, petName(), 'celebrating');
     sidebarProvider.update();
-    if (comboTimeout) clearTimeout(comboTimeout);
-    comboTimeout = setTimeout(() => { comboTimeout = null; }, 5000);
   });
 
   // ── Event: File Saved ──

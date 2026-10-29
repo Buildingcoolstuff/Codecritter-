@@ -21,6 +21,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add configurable Weekend Streak Protection (codecritter.weekendStreakProtection) to protect streaks over Saturday and Sunday (Fixes #31).
 - Clean up corrupted Unicode Mojibake artifacts in media/sidebar.html (Fixes #28).
 - Update .vscodeignore to exclude internal scripts/tests/CI and add Content-Security-Policy to sidebar webview (Fixes #29).
+- Fix pet mood duration and unlock typing combo meter in Feed/Play commands (Fixes #23).
 
 ---
 
