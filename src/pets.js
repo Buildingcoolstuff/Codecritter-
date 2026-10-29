@@ -34,13 +34,13 @@ function getPetSvg(species) {
     <ellipse cx="48" cy="68" rx="9" ry="6" fill="#ff9eb5" opacity="0.55"/>
     <ellipse cx="92" cy="68" rx="9" ry="6" fill="#ff9eb5" opacity="0.55"/>
     <!-- Eyes -->
-    <g class="eye-l">
+    <g class="eye-l" style="transform-origin: 57px 55px">
       <circle cx="57" cy="54" r="11" fill="white"/>
       <circle cx="57" cy="56" r="6.5" fill="#2d2d4a"/>
       <circle cx="59.5" cy="52.5" r="2.8" fill="white"/>
       <path d="M 49 44 Q 57 40 65 44" stroke="var(--pet-antennae)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
     </g>
-    <g class="eye-r">
+    <g class="eye-r" style="transform-origin: 83px 55px">
       <circle cx="83" cy="54" r="11" fill="white"/>
       <circle cx="83" cy="56" r="6.5" fill="#2d2d4a"/>
       <circle cx="85.5" cy="52.5" r="2.8" fill="white"/>
@@ -99,11 +99,11 @@ function getPetSvg(species) {
     <path d="M 43 42 L 38 22 L 55 38 Z" fill="var(--pet-accent)"/>
     <path d="M 97 42 L 102 22 L 85 38 Z" fill="var(--pet-accent)"/>
     <!-- Eyes -->
-    <g class="eye-l">
+    <g class="eye-l" style="transform-origin: 58px 60px">
       <circle cx="58" cy="60" r="7" fill="white"/>
       <circle cx="58" cy="60" r="4" fill="#2d2d4a"/>
     </g>
-    <g class="eye-r">
+    <g class="eye-r" style="transform-origin: 82px 60px">
       <circle cx="82" cy="60" r="7" fill="white"/>
       <circle cx="82" cy="60" r="4" fill="#2d2d4a"/>
     </g>
@@ -151,10 +151,10 @@ function getPetSvg(species) {
     <!-- Face Screen -->
     <rect x="45" y="40" width="50" height="25" rx="3" fill="#1e1e3a"/>
     <!-- Eyes -->
-    <g class="eye-l">
+    <g class="eye-l" style="transform-origin: 58px 48px">
       <rect x="52" y="45" width="12" height="6" rx="2" fill="var(--pet-antennae)"/>
     </g>
-    <g class="eye-r">
+    <g class="eye-r" style="transform-origin: 82px 48px">
       <rect x="76" y="45" width="12" height="6" rx="2" fill="var(--pet-antennae)"/>
     </g>
     <!-- Mouth -->
@@ -222,11 +222,39 @@ function getPetSvg(species) {
 /**
  * Returns accessory SVGs based on level.
  */
-function getAccessoriesSvg(level) {
+/**
+ * Returns accessory SVGs based on level and pet species.
+ *
+ * @param {number} level
+ * @param {string} [species='alien']
+ * @returns {string}
+ */
+function getAccessoriesSvg(level, species = 'alien') {
   let svg = '';
   // Level 5: Sunglasses
   if (level >= 5) {
-    svg += \`
+    if (species === 'robot') {
+      svg += `
+      <g class="acc-sunglasses" transform="translate(0, -10)">
+        <path d="M 42 55 Q 57 55 57 65 Q 42 65 42 55" fill="#111" stroke="#333" stroke-width="1"/>
+        <path d="M 83 55 Q 98 55 98 65 Q 83 65 83 55" fill="#111" stroke="#333" stroke-width="1"/>
+        <line x1="57" y1="58" x2="83" y2="58" stroke="#111" stroke-width="3"/>
+        <line x1="42" y1="58" x2="35" y2="55" stroke="#111" stroke-width="2"/>
+        <line x1="98" y1="58" x2="105" y2="55" stroke="#111" stroke-width="2"/>
+      </g>
+    `;
+    } else if (species === 'cat') {
+      svg += `
+      <g class="acc-sunglasses" transform="translate(0, 3)">
+        <path d="M 42 55 Q 57 55 57 65 Q 42 65 42 55" fill="#111" stroke="#333" stroke-width="1"/>
+        <path d="M 83 55 Q 98 55 98 65 Q 83 65 83 55" fill="#111" stroke="#333" stroke-width="1"/>
+        <line x1="57" y1="58" x2="83" y2="58" stroke="#111" stroke-width="3"/>
+        <line x1="42" y1="58" x2="35" y2="55" stroke="#111" stroke-width="2"/>
+        <line x1="98" y1="58" x2="105" y2="55" stroke="#111" stroke-width="2"/>
+      </g>
+    `;
+    } else {
+      svg += `
       <g class="acc-sunglasses">
         <path d="M 42 55 Q 57 55 57 65 Q 42 65 42 55" fill="#111" stroke="#333" stroke-width="1"/>
         <path d="M 83 55 Q 98 55 98 65 Q 83 65 83 55" fill="#111" stroke="#333" stroke-width="1"/>
@@ -234,21 +262,61 @@ function getAccessoriesSvg(level) {
         <line x1="42" y1="58" x2="35" y2="55" stroke="#111" stroke-width="2"/>
         <line x1="98" y1="58" x2="105" y2="55" stroke="#111" stroke-width="2"/>
       </g>
-    \`;
+    `;
+    }
   }
   // Level 10: Top Hat
   if (level >= 10 && level < 15) {
-    svg += \`
+    if (species === 'cat') {
+      svg += `
+      <g class="acc-tophat">
+        <rect x="57" y="12" width="26" height="24" fill="#222"/>
+        <rect x="50" y="36" width="40" height="4" fill="#222"/>
+        <rect x="57" y="31" width="26" height="5" fill="#e74c3c"/>
+      </g>
+    `;
+    } else if (species === 'robot') {
+      svg += `
+      <g class="acc-tophat" transform="translate(0, -5)">
+        <rect x="55" y="10" width="30" height="25" fill="#222"/>
+        <rect x="45" y="35" width="50" height="5" fill="#222"/>
+        <rect x="55" y="30" width="30" height="5" fill="#e74c3c"/>
+      </g>
+    `;
+    } else {
+      svg += `
       <g class="acc-tophat">
         <rect x="55" y="10" width="30" height="25" fill="#222"/>
         <rect x="45" y="35" width="50" height="5" fill="#222"/>
         <rect x="55" y="30" width="30" height="5" fill="#e74c3c"/>
       </g>
-    \`;
+    `;
+    }
   }
   // Level 15: Party Hat
   if (level >= 15 && level < 20) {
-    svg += \`
+    if (species === 'cat') {
+      svg += `
+      <g class="acc-partyhat">
+        <polygon points="70,12 54,38 86,38" fill="#3498db"/>
+        <circle cx="70" cy="10" r="5" fill="#f1c40f"/>
+        <circle cx="62" cy="34" r="2.5" fill="#e74c3c"/>
+        <circle cx="70" cy="28" r="2.5" fill="#2ecc71"/>
+        <circle cx="78" cy="34" r="2.5" fill="#9b59b6"/>
+      </g>
+    `;
+    } else if (species === 'robot') {
+      svg += `
+      <g class="acc-partyhat" transform="translate(0, -8)">
+        <polygon points="70,10 50,40 90,40" fill="#3498db"/>
+        <circle cx="70" cy="8" r="6" fill="#f1c40f"/>
+        <circle cx="60" cy="35" r="3" fill="#e74c3c"/>
+        <circle cx="70" cy="30" r="3" fill="#2ecc71"/>
+        <circle cx="80" cy="35" r="3" fill="#9b59b6"/>
+      </g>
+    `;
+    } else {
+      svg += `
       <g class="acc-partyhat">
         <polygon points="70,10 50,40 90,40" fill="#3498db"/>
         <circle cx="70" cy="8" r="6" fill="#f1c40f"/>
@@ -256,11 +324,33 @@ function getAccessoriesSvg(level) {
         <circle cx="70" cy="30" r="3" fill="#2ecc71"/>
         <circle cx="80" cy="35" r="3" fill="#9b59b6"/>
       </g>
-    \`;
+    `;
+    }
   }
   // Level 20: Crown
   if (level >= 20) {
-    svg += \`
+    if (species === 'cat') {
+      svg += `
+      <g class="acc-crown">
+        <path d="M 52 38 L 55 18 L 62 29 L 70 12 L 78 29 L 85 18 L 88 38 Z" fill="#f1c40f" stroke="#d4ac0d" stroke-width="1.8"/>
+        <circle cx="55" cy="18" r="2.5" fill="#e74c3c"/>
+        <circle cx="70" cy="12" r="2.5" fill="#3498db"/>
+        <circle cx="85" cy="18" r="2.5" fill="#2ecc71"/>
+        <rect x="54" y="34" width="32" height="3" fill="#e67e22"/>
+      </g>
+    `;
+    } else if (species === 'robot') {
+      svg += `
+      <g class="acc-crown" transform="translate(0, -8)">
+        <path d="M 45 40 L 50 15 L 60 30 L 70 10 L 80 30 L 90 15 L 95 40 Z" fill="#f1c40f" stroke="#d4ac0d" stroke-width="2"/>
+        <circle cx="50" cy="15" r="3" fill="#e74c3c"/>
+        <circle cx="70" cy="10" r="3" fill="#3498db"/>
+        <circle cx="90" cy="15" r="3" fill="#2ecc71"/>
+        <rect x="50" y="35" width="40" height="3" fill="#e67e22"/>
+      </g>
+    `;
+    } else {
+      svg += `
       <g class="acc-crown">
         <path d="M 45 40 L 50 15 L 60 30 L 70 10 L 80 30 L 90 15 L 95 40 Z" fill="#f1c40f" stroke="#d4ac0d" stroke-width="2"/>
         <circle cx="50" cy="15" r="3" fill="#e74c3c"/>
@@ -268,9 +358,9 @@ function getAccessoriesSvg(level) {
         <circle cx="90" cy="15" r="3" fill="#2ecc71"/>
         <rect x="50" y="35" width="40" height="3" fill="#e67e22"/>
       </g>
-    \`;
+    `;
+    }
   }
-  
   return svg;
 }
 

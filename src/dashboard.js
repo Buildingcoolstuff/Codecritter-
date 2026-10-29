@@ -88,7 +88,7 @@ function _updatePanel(statsEngine, petName, currentMood) {
   const petSpecies = config.get('petSpecies', 'alien');
 
   const { getPetSvg, getAccessoriesSvg } = require('./pets');
-  const petSvgRaw = getPetSvg(petSpecies).replace('__ACCESSORIES__', getAccessoriesSvg(stats.level));
+  const petSvgRaw = getPetSvg(petSpecies).replace('__ACCESSORIES__', getAccessoriesSvg(stats.level, petSpecies));
 
   const milestoneData = MILESTONES.map(m => ({
     id:       m.id,

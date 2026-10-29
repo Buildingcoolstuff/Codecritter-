@@ -74,7 +74,7 @@ class SidebarProvider {
     const currentMood = this.getCurrentMood();
     const petName = this.getPetName();
 
-    const petSvgRaw = getPetSvg(petSpecies).replace('__ACCESSORIES__', getAccessoriesSvg(stats.level));
+    const petSvgRaw = getPetSvg(petSpecies).replace('__ACCESSORIES__', getAccessoriesSvg(stats.level, petSpecies));
 
     const htmlPath = path.join(__dirname, '..', 'media', 'sidebar.html');
     let html = 'Sidebar HTML not found.';
