@@ -413,6 +413,35 @@ function activate(context) {
     }
   });
 
+  // ── Reset Idle Mood on Activity / Focus / Wake ──
+  function resetIdleMood() {
+    lastActivity = Date.now();
+    if (!flashTimeout && (currentMood === 'sleepy' || currentMood === 'bored')) {
+      currentMood = prevErrorCount > 0 ? 'struggling' : 'happy';
+      _applyMood(currentMood);
+      updateDashboardIfOpen(stats, petName(), currentMood);
+      sidebarProvider.update();
+    }
+  }
+
+  // ── Event: Active Editor Changed ──
+  const onEditorChange = typeof vscode.window.onDidChangeActiveTextEditor === 'function'
+    ? vscode.window.onDidChangeActiveTextEditor(editor => {
+        if (editor) {
+          resetIdleMood();
+        }
+      })
+    : { dispose() {} };
+
+  // ── Event: Window Focus / System Wake ──
+  const onWindowStateChange = typeof vscode.window.onDidChangeWindowState === 'function'
+    ? vscode.window.onDidChangeWindowState(state => {
+        if (state && state.focused) {
+          resetIdleMood();
+        }
+      })
+    : { dispose() {} };
+
   // ── Idle Mood Timer (every 30 s) ──
   idleTimer = setInterval(() => {
     if (flashTimeout) return;
@@ -488,6 +517,8 @@ function activate(context) {
     onSave,
     onChange,
     onDiagnostics,
+    onEditorChange,
+    onWindowStateChange,
     onConfigChange,
     { dispose: () => {
         clearInterval(idleTimer);
